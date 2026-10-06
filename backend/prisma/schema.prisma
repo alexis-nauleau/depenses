@@ -13,11 +13,26 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+model Categorie {
+  id       String    @id @default(cuid())
+  nom      String
+  couleur  String
+  depenses Depense[]
+}
+
 model Depense {
-  id        String   @id @default(cuid())
-  titre     String
-  montant   Float
-  categorie String
-  type      String   @default("depense") // "depense" ou "revenu"
-  date      DateTime @default(now())
+  id          String     @id @default(cuid())
+  titre       String
+  montant     Float
+  type        String     @default("depense")
+  date        DateTime   @default(now())
+
+  // Stocke uniquement l'identifiant (id) de la catégorie liée.
+  // "String?" avec le "?" = optionnel 
+  categorieId String?
+
+  // "@relation(...)" dit à Prisma COMMENT faire le lien entre les deux tables :
+  // "fields: [categorieId]" = utilise la colonne categorieId de CETTE table (Depense)
+  // "references: [id]" = pour la comparer à la colonne id de l'autre table (Categorie)
+  categorie   Categorie? @relation(fields: [categorieId], references: [id])
 }
