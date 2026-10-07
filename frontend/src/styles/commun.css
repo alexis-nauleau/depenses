@@ -1,0 +1,79 @@
+:root {
+  --bleu: #4db5ff;
+  --bleu-fonce: #2f9ff0; 
+  --vert: #2eb82e;
+  --rouge: #e8365d;
+  --texte: #333;
+  --gris: #999;
+  --fond-page: #eef0f6;
+  --bordure: #dde0ea;
+  --rail: #ececf3; 
+}
+
+
+body {
+  margin: 0; 
+  background: var(--fond-page);
+  font-family: system-ui, sans-serif; /* police du système */
+}
+
+
+#app {
+  max-width: 600px; 
+  margin: 0 auto; 
+  background: var(--fond-page);
+  min-height: 100vh; /* au moins toute la hauteur de l'écran */
+}
+
+/* Couleurs des montants*/
+.positif {
+  color: var(--vert) !important;
+}
+.negatif {
+  color: var(--rouge) !important;
+}
+
+
+.panneau {
+  background: white;
+  padding: 8px 24px 20px;
+  margin: 2px 0;
+}
+
+/*  titre  */
+.titre-section {
+  font-size: 13px;
+  letter-spacing: 1px; 
+  text-transform: uppercase;
+  color: var(--texte);
+  margin: 18px 0 10px;
+}
+
+/* Champs de saisie */
+.champ {
+  padding: 10px;
+  border: 1px solid var(--bordure);
+  border-radius: 6px; 
+  font-size: 14px;
+}
+
+/* Bouton bleu */
+.bouton {
+  background: var(--bleu);
+  color: white;
+  border: none;
+  padding: 11px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer; 
+}
+.bouton:hover {
+  background: var(--bleu-fonce); 
+}
+
+/* Message Aucun revenu saisi*/
+.vide {
+  font-size: 13px;
+  color: #aaa;
+  margin: 4px 0;
+}
