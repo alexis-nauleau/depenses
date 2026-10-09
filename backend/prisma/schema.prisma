@@ -13,11 +13,22 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id         String      @id @default(cuid())
+  email      String      @unique
+  motDePasse String
+  depenses   Depense[]
+  categories Categorie[]
+}
+
 model Categorie {
   id       String    @id @default(cuid())
   nom      String
   couleur  String
   depenses Depense[]
+  userId   String
+  user     User      @relation(fields: [userId], references: [id])
 }
 
 model Depense {
@@ -35,4 +46,7 @@ model Depense {
   // "fields: [categorieId]" = utilise la colonne categorieId de CETTE table (Depense)
   // "references: [id]" = pour la comparer à la colonne id de l'autre table (Categorie)
   categorie   Categorie? @relation(fields: [categorieId], references: [id])
+
+  userId      String
+  user        User       @relation(fields: [userId], references: [id])
 }
