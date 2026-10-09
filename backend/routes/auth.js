@@ -1,4 +1,6 @@
 const express = require('express')
+
+const exigerConnexion = require('../middleware/auth')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { PrismaClient } = require('@prisma/client')
@@ -83,10 +85,25 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ erreur: 'Erreur serveur.' })
   }
 })
-
 // POST /auth/logout : on retire le bracelet
 router.post('/logout', (req, res) => {
   res.clearCookie('token')
   res.json({ ok: true })
 })
+
+// GET /auth/me : renvoie l'utilisateur connecté
+router.get('/me', exigerConnexion, async (req, res) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: req.userId },
+      select: { id: true, email: true },
+    })
+    if (!user) return res.status(401).json({ erreur: 'Compte introuvable.' })
+    res.json(user)
+  } catch (e) {
+    console.error(e)
+    res.status(500).json({ erreur: 'Erreur serveur.' })
+  }
+})
+
 module.exports = router
