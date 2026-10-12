@@ -49,4 +49,6 @@ model Depense {
 
   userId      String
   user        User       @relation(fields: [userId], references: [id])
+    serieId String?
+  @@index([userId, date])
 }

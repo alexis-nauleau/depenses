@@ -1,21 +1,26 @@
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, watch } from 'vue'
 import { useAuth } from './composables/useAuth'
 import { useBudget } from './composables/useBudget'
 import PageConnexion from './components/PageConnexion.vue'
+import SelecteurMois from './components/SelecteurMois.vue'
 import ResumeBudget from './components/ResumeBudget.vue'
 import FormulaireLigne from './components/FormulaireLigne.vue'
 import GestionCategories from './components/GestionCategories.vue'
 import ListeLignes from './components/ListeLignes.vue'
 import AnneauCategorie from './components/AnneauCategorie.vue'
 
+// Connexion : qui est connecté ?
 const { user, verifie, verifier, deconnecter } = useAuth()
 
-// Si le serveur répond 401 pendant qu'on utilise l'appli (session expirée),
-// on repasse en "non connecté" : la page de connexion s'affiche toute seule
+// Budget : données du mois affiché + calculs.
+// Si le serveur répond 401 (session expirée), on repasse en "non connecté".
 const {
+  annee,
+  mois,
   categories,
   erreur,
+  report,
   listeDepenses,
   listeRevenus,
   totalDepenses,
@@ -25,14 +30,19 @@ const {
   parCategorie,
   charger,
   supprimer,
+  modifier,
   vider,
+  allerMois,
+  changerAnnee,
 } = useBudget(() => {
   vider()
   user.value = null
 })
 
+// Appelée quand PageConnexion signale une connexion réussie.
+// On revérifie avec /auth/me pour prouver que le cookie fonctionne.
 async function apresConnexion() {
-  await verifier() // rappelle /auth/me : prouve que le cookie est bien renvoyé
+  await verifier()
   if (user.value) await charger()
 }
 
@@ -46,6 +56,11 @@ onMounted(async () => {
   await verifier()
   if (user.value) await charger()
 })
+
+// Quand on change de mois ou d'année, on recharge (seulement si connecté)
+watch([annee, mois], () => {
+  if (user.value) charger()
+})
 </script>
 
 <template>
@@ -58,7 +73,7 @@ onMounted(async () => {
   </header>
 
   <main>
-    <!-- 1. On attend la réponse de /auth/me (évite d'afficher la connexion une fraction de seconde) -->
+    <!-- 1. On attend la réponse de /auth/me -->
     <p v-if="!verifie" class="attente">Chargement…</p>
 
     <!-- 2. Non connecté -->
@@ -68,14 +83,17 @@ onMounted(async () => {
     <template v-else>
       <p v-if="erreur" class="erreur">{{ erreur }}</p>
 
+      <SelecteurMois :annee="annee" :mois="mois" @mois="allerMois" @annee="changerAnnee" />
+
       <ResumeBudget
         :pourcent-depense="pourcentDepense"
         :solde="solde"
         :total-depenses="totalDepenses"
         :total-revenus="totalRevenus"
+        :report="report"
       />
 
-      <FormulaireLigne :categories="categories" @ajoute="charger" />
+      <FormulaireLigne :categories="categories" :annee="annee" :mois="mois" @ajoute="charger" />
 
       <GestionCategories :categories="categories" @change="charger" />
 
@@ -85,6 +103,7 @@ onMounted(async () => {
         :total-revenus="totalRevenus"
         :total-depenses="totalDepenses"
         @supprimer="supprimer"
+        @modifier="modifier"
       />
 
       <section class="grille">
