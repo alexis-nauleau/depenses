@@ -1,64 +1,49 @@
 <script setup>
 import { ref } from 'vue'
-import { API } from '../api'
-
+import { apiFetch } from '../api'
 
 defineProps({ categories: Array })
-
-// EMITS : message "change" envoyé au parent après une création ou suppression
 const emit = defineEmits(['change'])
 
-// Champs du formulaire de création
 const nom = ref('')
-const couleur = ref('#4db5ff') // couleur proposée par défaut
+const couleur = ref('#4db5ff')
 const erreur = ref('')
 
-// Crée une catégorie
 async function creer() {
   erreur.value = ''
-
-
   if (!nom.value.trim()) {
     erreur.value = 'Donne un nom à la catégorie.'
     return
   }
-
   try {
-    const res = await fetch(`${API}/categories`, {
+    const res = await apiFetch('/categories', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nom: nom.value.trim(), couleur: couleur.value }),
+      body: { nom: nom.value.trim(), couleur: couleur.value },
     })
     if (!res.ok) throw new Error()
-
-    nom.value = '' // on vide le champ
-    emit('change') // le parent va recharger les données
+    nom.value = ''
+    emit('change')
   } catch (e) {
     erreur.value = 'Impossible de créer la catégorie.'
   }
 }
 
-// Supprime une catégorie
 async function supprimer(id) {
   erreur.value = ''
   try {
-    const res = await fetch(`${API}/categories/${id}`, { method: 'DELETE' })
-
-    // 409 = "conflit" : ton backend le renvoie quand la catégorie est
-    // encore utilisée par au moins une dépense
+    const res = await apiFetch(`/categories/${id}`, { method: 'DELETE' })
+    // 409 : le backend refuse car la catégorie est encore utilisée
     if (res.status === 409) {
       erreur.value = 'Cette catégorie est encore utilisée par au moins une dépense.'
       return
     }
     if (!res.ok) throw new Error()
-
     emit('change')
   } catch (e) {
     erreur.value = 'Suppression impossible.'
   }
 }
 </script>
-
 <template>
   <section class="panneau">
     <h2 class="titre-section">Catégories</h2>
