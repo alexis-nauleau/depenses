@@ -1,15 +1,20 @@
 <script setup>
 import { MOIS } from '../utils/format'
 
+// Props : le mois (1 à 12) et l'année à afficher
 defineProps({ annee: Number, mois: Number })
-// Le parent change le mois ou l'année : ce composant envoie juste -1 ou +1
+
+// Ce composant ne change rien lui-même : il envoie -1 ou +1 au parent,
+// qui modifie le mois ou l'année
 defineEmits(['mois', 'annee'])
 </script>
 
 <template>
   <nav class="selecteur">
     <div class="groupe">
+      <!-- $emit est disponible directement dans le template -->
       <button @click="$emit('mois', -1)" title="Mois précédent">‹</button>
+      <!-- MOIS[mois - 1] : le mois 4 correspond à MOIS[3] = "Avril" -->
       <strong>{{ MOIS[mois - 1] }}</strong>
       <button @click="$emit('mois', 1)" title="Mois suivant">›</button>
     </div>
@@ -35,7 +40,7 @@ defineEmits(['mois', 'annee'])
   gap: 10px;
 }
 strong {
-  min-width: 80px;
+  min-width: 80px; 
   text-align: center;
   color: var(--texte);
   font-weight: 500;
@@ -45,7 +50,7 @@ button {
   border: none;
   width: 30px;
   height: 30px;
-  border-radius: 50%;
+  border-radius: 50%; 
   font-size: 18px;
   cursor: pointer;
   color: var(--texte);

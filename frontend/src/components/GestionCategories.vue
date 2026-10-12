@@ -48,11 +48,10 @@ async function supprimer(id) {
   <section class="panneau">
     <h2 class="titre-section">Catégories</h2>
 
-    <!-- Formulaire de création -->
+
     <form class="ajout" @submit.prevent="creer">
       <input class="champ" v-model="nom" placeholder="Ex : Logement, Loisirs…" />
-      <!-- type="color" : sélecteur de couleur natif du navigateur.
-           Il renvoie directement une valeur du type "#4db5ff". -->
+
       <input v-model="couleur" type="color" title="Couleur" />
       <button class="bouton" type="submit">Créer</button>
     </form>
@@ -60,8 +59,7 @@ async function supprimer(id) {
     <p v-if="erreur" class="erreur">{{ erreur }}</p>
 
     <div v-for="c in categories" :key="c.id" class="ligne">
-      <!-- Pastille de la couleur de la catégorie. Le style est dynamique
-           (la couleur vient de la base), donc on utilise :style -->
+      
       <span class="pastille" :style="{ backgroundColor: c.couleur }"></span>
       <span>{{ c.nom }}</span>
       <button @click="supprimer(c.id)" title="Supprimer">✕</button>

@@ -1,54 +1,45 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
   provider = "prisma-client-js"
-
 }
+
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
+// Un compte utilisateur
 model User {
-  id         String      @id @default(cuid())
-  email      String      @unique
-  motDePasse String
-  depenses   Depense[]
-  categories Categorie[]
+  id         String      @id @default(cuid()) // identifiant unique généré automatiquement
+  email      String      @unique              // @unique : deux comptes ne peuvent pas avoir le même email
+  motDePasse String                           // jamais en clair : c'est le hash bcrypt
+  depenses   Depense[]                        
+  categories Categorie[]                      
 }
 
-model Categorie {
-  id       String    @id @default(cuid())
-  nom      String
-  couleur  String
-  depenses Depense[]
-  userId   String
-  user     User      @relation(fields: [userId], references: [id])
-}
-
+// Une ligne du budget : un revenu OU une dépense
 model Depense {
   id          String     @id @default(cuid())
   titre       String
   montant     Float
-  type        String     @default("depense")
-  date        DateTime   @default(now())
-
-  // Stocke uniquement l'identifiant (id) de la catégorie liée.
-  // "String?" avec le "?" = optionnel 
-  categorieId String?
-
-  // "@relation(...)" dit à Prisma COMMENT faire le lien entre les deux tables :
-  // "fields: [categorieId]" = utilise la colonne categorieId de CETTE table (Depense)
-  // "references: [id]" = pour la comparer à la colonne id de l'autre table (Categorie)
+  type        String     @default("depense")  
+  date        DateTime   @default(now())      
+  categorieId String?                         // le "?" veut dire facultatif
   categorie   Categorie? @relation(fields: [categorieId], references: [id])
-
-  userId      String
+  userId      String                          
   user        User       @relation(fields: [userId], references: [id])
-    serieId String?
-  @@index([userId, date])
+  serieId     String?                         // même valeur pour toutes les lignes d'une série mensuelle
+
+  @@index([userId, date])                     // accélère la recherche "mes lignes d'un mois"
+}
+
+
+model Categorie {
+  id       String    @id @default(cuid())
+  nom      String
+  couleur  String                              
+  depenses Depense[]
+  userId   String
+  user     User      @relation(fields: [userId], references: [id])
 }

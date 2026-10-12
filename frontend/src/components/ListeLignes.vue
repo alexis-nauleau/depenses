@@ -2,18 +2,22 @@
 import { formatEuro } from '../utils/format'
 import LigneBudget from './LigneBudget.vue'
 
+// Props : les listes et totaux envoyés par App.vue
 defineProps({
   revenus: Array,
   depenses: Array,
   totalRevenus: Number,
   totalDepenses: Number,
 })
+
 defineEmits(['supprimer', 'modifier'])
 </script>
 
 <template>
   <section class="panneau">
     <h2 class="titre-section">Revenus</h2>
+
+    
     <LigneBudget
       v-for="d in revenus"
       :key="d.id"
@@ -22,6 +26,7 @@ defineEmits(['supprimer', 'modifier'])
       @supprimer="(id, suite) => $emit('supprimer', id, suite)"
       @modifier="(id, data) => $emit('modifier', id, data)"
     />
+    <!-- !revenus.length est vrai quand le tableau est vide -->
     <p v-if="!revenus.length" class="vide">Aucun revenu ce mois-ci.</p>
     <div class="total">
       <span>Total revenus</span>
@@ -47,7 +52,7 @@ defineEmits(['supprimer', 'modifier'])
 <style scoped>
 .total {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; 
   padding: 12px 0 4px;
   font-weight: 600;
   font-size: 15px;

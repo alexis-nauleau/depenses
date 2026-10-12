@@ -17,7 +17,7 @@ router.post('/register', async (req, res) => {
   const email = String(emailBrut || '').trim().toLowerCase()
   const motDePasse = String(mdpBrut || '')
 
-  // 2. On refuse les données invalides
+
   if (!/^\S+@\S+\.\S+$/.test(email)) {
     return res.status(400).json({ erreur: 'Email invalide.' })
   }
@@ -26,13 +26,13 @@ router.post('/register', async (req, res) => {
   }
 
   try {
-    // 3. On brouille le mot de passe (jamais stocké en clair)
+    //  On brouille le mot de passe 
     const hash = await bcrypt.hash(motDePasse, 10)
 
-    // 4. On crée l'utilisateur en base
+    //  On crée l'utilisateur en base
     const user = await prisma.user.create({ data: { email, motDePasse: hash } })
 
-    // 5. On fabrique le bracelet (JWT) et on le dépose dans un cookie
+    //  On fabrique le bracelet (JWT) 
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
       expiresIn: `${DUREE_JOURS}d`,
     })
@@ -44,7 +44,7 @@ router.post('/register', async (req, res) => {
 
     res.status(201).json({ id: user.id, email: user.email })
   } catch (e) {
-    // P2002 = l'email existe déjà (contrainte @unique)
+    
     if (e.code === 'P2002') {
       return res.status(409).json({ erreur: 'Un compte existe déjà avec cet email.' })
     }
