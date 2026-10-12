@@ -13,8 +13,9 @@ const DUREE_JOURS = 7
 // POST /auth/register
 router.post('/register', async (req, res) => {
   // 1. On récupère ce que l'utilisateur a envoyé
-  const email = String(req.body.email || '').trim().toLowerCase()
-  const motDePasse = String(req.body.motDePasse || '')
+  const { email: emailBrut, motDePasse: mdpBrut } = req.body || {}
+  const email = String(emailBrut || '').trim().toLowerCase()
+  const motDePasse = String(mdpBrut || '')
 
   // 2. On refuse les données invalides
   if (!/^\S+@\S+\.\S+$/.test(email)) {
@@ -53,8 +54,9 @@ router.post('/register', async (req, res) => {
 })
 // POST /auth/login
 router.post('/login', async (req, res) => {
-  const email = String(req.body.email || '').trim().toLowerCase()
-  const motDePasse = String(req.body.motDePasse || '')
+  const { email: emailBrut, motDePasse: mdpBrut } = req.body || {}
+  const email = String(emailBrut || '').trim().toLowerCase()
+  const motDePasse = String(mdpBrut || '')
 
   try {
     // 1. On cherche l'utilisateur par son email
