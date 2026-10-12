@@ -8,6 +8,7 @@ defineProps({
   solde: Number,
   totalDepenses: Number,
   totalRevenus: Number,
+  report: Number,
 })
 </script>
 
@@ -15,7 +16,7 @@ defineProps({
   <section class="resume">
     <!-- Bloc de gauche : pourcentage dépensé et jauge -->
     <div class="bloc">
-   
+
       <strong>{{ pourcentDepense }} %</strong>
       <span>DÉPENSÉ CE MOIS-CI</span>
       <div class="jauge">
@@ -32,31 +33,35 @@ defineProps({
   </section>
 
   <p class="phrase">
-    Vous avez dépensé <b>{{ formatEuro(totalDepenses) }}</b> pour
-    <b>{{ formatEuro(totalRevenus) }}</b> de revenus.
+    Ce mois : <b>{{ formatEuro(totalRevenus) }}</b> de revenus,
+    <b>{{ formatEuro(totalDepenses) }}</b> de dépenses.<br />
+    Report des mois précédents : <b>{{ formatEuro(report) }}</b>
   </p>
 </template>
 
 <style scoped>
 .resume {
   display: grid;
-  grid-template-columns: 1fr 1fr; 
+  grid-template-columns: 1fr 1fr;
   gap: 2px;
 }
+
 .bloc {
   background: white;
   padding: 24px 16px;
   text-align: center;
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   align-items: center;
   gap: 6px;
 }
+
 .bloc strong {
   font-size: 30px;
   font-weight: 500;
   color: var(--texte);
 }
+
 .bloc span {
   font-size: 11px;
   letter-spacing: 0.5px;
@@ -69,21 +74,24 @@ defineProps({
   height: 10px;
   background: var(--rail);
   border-radius: 5px;
-  overflow: hidden; /* coupe ce qui dépasse du rail */
+  overflow: hidden;
+  /* coupe ce qui dépasse du rail */
   margin-top: 6px;
 }
+
 .jauge-remplie {
   height: 100%;
   background: var(--bleu);
   border-radius: 5px;
-  transition: width 0.6s ease; 
+  transition: width 0.6s ease;
 }
+
 .phrase {
   margin: 0;
   padding: 18px 24px;
   text-align: center;
   font-size: 14px;
   color: #666;
-  line-height: 1.5; 
+  line-height: 1.5;
 }
 </style>
