@@ -1,4 +1,6 @@
-export const API = 'http://localhost:3001'
+// En développement (npm run dev) : le backend est sur le port 3001.
+// En production : le front et l'API sont sur la même adresse, donc adresse relative.
+export const API = import.meta.env.DEV ? 'http://localhost:3001' : ''
 
 // Remplace fetch dans toute l'appli.
 // - credentials: 'include' : le navigateur envoie le cookie de connexion

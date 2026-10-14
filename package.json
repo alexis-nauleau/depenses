@@ -1,0 +1,8 @@
+{
+  "name": "depenses",
+  "private": true,
+  "scripts": {
+    "build": "npm install --prefix frontend && npm run build --prefix frontend && npm install --prefix backend && npm run prisma:generate --prefix backend",
+    "start": "npm run prisma:deploy --prefix backend && node backend/index.js"
+  }
+}

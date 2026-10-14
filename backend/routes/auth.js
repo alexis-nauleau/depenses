@@ -10,8 +10,19 @@ const prisma = new PrismaClient()
 
 const DUREE_JOURS = 7
 
+const rateLimit = require('express-rate-limit')
+
+// Maximum 10 essais par adresse IP et par 15 minutes
+const limiteur = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { erreur: 'Trop de tentatives, réessaie dans quelques minutes.' },
+})
+
 // POST /auth/register
-router.post('/register', async (req, res) => {
+router.post('/register', limiteur,async (req, res) => {
   // 1. On récupère ce que l'utilisateur a envoyé
   const { email: emailBrut, motDePasse: mdpBrut } = req.body || {}
   const email = String(emailBrut || '').trim().toLowerCase()
@@ -37,14 +48,15 @@ router.post('/register', async (req, res) => {
       expiresIn: `${DUREE_JOURS}d`,
     })
     res.cookie('token', token, {
-      httpOnly: true, // illisible par JavaScript
+      httpOnly: true,
       sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production', // HTTPS obligatoire en production
       maxAge: DUREE_JOURS * 24 * 60 * 60 * 1000,
     })
 
     res.status(201).json({ id: user.id, email: user.email })
   } catch (e) {
-    
+
     if (e.code === 'P2002') {
       return res.status(409).json({ erreur: 'Un compte existe déjà avec cet email.' })
     }
@@ -53,7 +65,7 @@ router.post('/register', async (req, res) => {
   }
 })
 // POST /auth/login
-router.post('/login', async (req, res) => {
+router.post('/login', limiteur, async (req, res) => {
   const { email: emailBrut, motDePasse: mdpBrut } = req.body || {}
   const email = String(emailBrut || '').trim().toLowerCase()
   const motDePasse = String(mdpBrut || '')
