@@ -1,13 +1,33 @@
-<!DOCTYPE html>
-<html lang="">
+<!doctype html>
+<html lang="fr">
   <head>
-    <meta charset="UTF-8">
-    <link rel="icon" href="/favicon.ico">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vite App</title>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <!-- Icône utilisée par l'iPhone pour le raccourci sur l'écran d'accueil (180x180) -->
+    <link rel="apple-touch-icon" href="/logo180.png" />
+
+    <!-- Couleur de la barre du navigateur sur mobile : ici le bleu de l'appli -->
+    <meta name="theme-color" content="#4db5ff" />
+
+    <!-- Sur iPhone : ouvre l'appli en plein écran, sans la barre d'adresse de Safari,
+         quand on la lance depuis l'écran d'accueil -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+
+    <!-- Nom sous l'icône sur l'écran d'accueil de l'iPhone -->
+    <meta name="apple-mobile-web-app-title" content="Budget" />
+
+    <title>Budget</title>
   </head>
+
+
   <body>
+ 
     <div id="app"></div>
+
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
