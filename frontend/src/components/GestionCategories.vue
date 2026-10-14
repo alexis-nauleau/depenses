@@ -87,13 +87,14 @@ async function supprimer(id) {
 }
 .ligne {
   display: grid;
-  grid-template-columns: 16px 1fr 28px;
+  grid-template-columns: 16px minmax(0, 1fr) 28px;
   gap: 12px;
   align-items: center;
   padding: 8px 0;
   border-bottom: 1px solid #f0f1f6;
   font-size: 14px;
   color: #444;
+  overflow-wrap: anywhere;
 }
 .pastille {
   width: 14px;

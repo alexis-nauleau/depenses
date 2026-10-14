@@ -80,21 +80,14 @@ async function envoyer() {
   <!-- @submit.prevent : appelle envoyer() sans recharger la page -->
   <form class="formulaire" @submit.prevent="envoyer">
     <div class="choix">
-      
+
       <label><input type="radio" value="revenu" v-model="type" /> Revenu</label>
       <label><input type="radio" value="depense" v-model="type" /> Dépense</label>
     </div>
 
 
     <input class="champ" v-model="titre" placeholder="Ex : CAF, Salaire, Loyer…" />
-    <input
-      class="champ"
-      v-model="montant"
-      type="number"
-      step="0.01"
-      min="0"
-      placeholder="Montant en €"
-    />
+    <input class="champ" v-model="montant" type="number" step="0.01" min="0" placeholder="Montant en €" />
 
 
     <select v-if="type === 'depense'" class="champ" v-model="categorieId">
@@ -128,9 +121,10 @@ async function envoyer() {
   background: white;
   padding: 20px 24px;
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   gap: 10px;
 }
+
 .choix {
   display: flex;
   gap: 20px;
@@ -140,17 +134,21 @@ async function envoyer() {
 
 .mois {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 6px;
   border: 1px solid var(--bordure);
   border-radius: 6px;
   padding: 8px 10px;
+  min-width: 0;
+  /* un fieldset refuse de rétrécir sans ça */
 }
+
 .mois legend {
   font-size: 12px;
   color: var(--gris);
   padding: 0 4px;
 }
+
 .case {
   font-size: 13px;
   color: #555;
@@ -158,11 +156,14 @@ async function envoyer() {
   align-items: center;
   gap: 4px;
 }
+
 .raccourcis {
   display: flex;
   gap: 8px;
-  flex-wrap: wrap; /* passe à la ligne si pas assez de place */
+  flex-wrap: wrap;
+  /* passe à la ligne si pas assez de place */
 }
+
 .raccourcis button {
   background: var(--rail);
   border: none;
@@ -172,6 +173,7 @@ async function envoyer() {
   cursor: pointer;
   color: var(--texte);
 }
+
 .erreur {
   margin: 0;
   color: #c0203f;

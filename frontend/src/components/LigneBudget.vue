@@ -118,6 +118,11 @@ small {
   flex-direction: column;
   gap: 8px;
 }
+.ligne > span:first-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
 .actions {
   display: flex;
   gap: 8px;
